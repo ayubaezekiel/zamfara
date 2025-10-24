@@ -14,16 +14,13 @@ export const Route = createFileRoute('/news/$newsId')({
 
 function NewsPostPage() {
   const { newsId } = Route.useParams()
-  const postId = newsId as string
+  const postId = newsId
 
   const {
     data: post,
     isPending: postLoading,
     error: postError,
   } = useBlogQueryById(postId)
-
-  console.log(post)
-
   if (postLoading) {
     return <PostSkeleton />
   }
@@ -53,7 +50,7 @@ function NewsPostPage() {
         {/* Header */}
         <header className="mb-10">
           <div className="flex flex-wrap items-center gap-3 mb-4">
-            {post.tags?.split(',').map((tag: string) => (
+            {post.tags.split(',').map((tag: string) => (
               <Badge key={tag} variant="secondary" className="text-xs">
                 <Tag className="w-3 h-3 mr-1" />
                 {tag.trim()}
