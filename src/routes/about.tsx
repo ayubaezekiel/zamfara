@@ -15,8 +15,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { CheckCircle, Heart, Target, Users } from 'lucide-react'
-import { memo } from 'react'
+import { CheckCircle, Heart, Target, Users, Menu } from 'lucide-react'
+import { memo, useState } from 'react'
 import {
   useReactTable,
   getCoreRowModel,
@@ -120,15 +120,15 @@ const members = [
 
 const team_members = [
   { fullName: 'Prof. Ahmad Yakubu', des: 'Surgeon' },
-  { fullName: 'Dr. Sa’ad Idris', des: 'Surgeon' },
+  { fullName: "Dr. Sa'ad Idris", des: 'Surgeon' },
   { fullName: 'Dr. Hassan Wara', des: 'Surgeon' },
-  { fullName: 'Dr. Musa Moh’d', des: 'Surgeon' },
+  { fullName: "Dr. Musa Moh'd", des: 'Surgeon' },
   { fullName: 'Nura Abubakar', des: 'Circulating Nurse' },
   { fullName: 'Nabila Sulaiman', des: 'Circulating Nurse' },
   { fullName: 'Sadiya Sani', des: 'Preoperative Nurse' },
   { fullName: 'Dr. Ibrahim Jibrila', des: 'Anaesthesiologist' },
   { fullName: 'Dr. Tsalha B/tsaba', des: 'Anaesthetist' },
-  { fullName: 'Nr. Zara’u Umar', des: 'Circulating Nurse' },
+  { fullName: "Nr. Zara'u Umar", des: 'Circulating Nurse' },
   { fullName: 'Nr. Balkisu Isah Ahmad', des: 'Nurse Anaesthetist' },
   { fullName: 'Amina Ibrahim', des: 'Preoperative Nurse' },
   { fullName: 'Nr. Nura Adamu', des: 'Preoperative Nurse' },
@@ -138,7 +138,7 @@ const team_members = [
   { fullName: 'Nr. Bushira I. Sayyadi', des: 'Circulating Nurse' },
   { fullName: 'Nasir Muhammad', des: 'W/Servant' },
   { fullName: 'Mannir Garba Kurmi', des: 'W/Servant' },
-  { fullName: 'Moh’d Garba', des: 'W/Servant' },
+  { fullName: "Moh'd Garba", des: 'W/Servant' },
   { fullName: 'Mubarak Almustapha', des: 'W/Servant' },
   { fullName: 'Haliru Usman', des: 'Attendant' },
   { fullName: 'Murtala Attahiru', des: 'Attendant' },
@@ -162,17 +162,17 @@ const team_members = [
 const resource_staff_eye = [
   { fullName: 'Dr. Adamu Dantanin', des: 'Ophthalmologist' },
   { fullName: 'Dr. Ibrahim Halilu', des: 'Ophthalmologist' },
-  { fullName: 'Dr. Kansushi Moh’d Ibrahim', des: 'Ophthalmologist' },
+  { fullName: "Dr. Kansushi Moh'd Ibrahim", des: 'Ophthalmologist' },
   { fullName: 'Dr. Mustapha Hafiz', des: 'Ophthalmologist' },
-  { fullName: 'Dr. Bello Moh’d Mafara', des: 'Ophthalmologist' },
+  { fullName: "Dr. Bello Moh'd Mafara", des: 'Ophthalmologist' },
   { fullName: 'Dr. Abdulkarim Tuba', des: 'Ophthalmologist' },
   { fullName: 'Lawali Hassan Shemori', des: 'Ophthalmic Nurse' },
   { fullName: 'Bashiru Yusuf', des: 'Ophthalmic Nurse' },
   { fullName: 'Abdulrahaman Ahmad', des: 'Ophthalmic Nurse' },
-  { fullName: 'Salisu Muh’d Dan Alhaji', des: 'Ophthalmic Nurse' },
+  { fullName: "Salisu Muh'd Dan Alhaji", des: 'Ophthalmic Nurse' },
   { fullName: 'Muktar Umar Faruk', des: 'Ophthalmic Nurse' },
   { fullName: 'Zulaihat Larai Musa', des: 'Ophthalmic Nurse' },
-  { fullName: 'Sama’ila Bello', des: 'Ophthalmic Nurse' },
+  { fullName: "Sama'ila Bello", des: 'Ophthalmic Nurse' },
   { fullName: 'Yusuf Dogara', des: 'Ophthalmic Nurse' },
   { fullName: 'Ishaka Mahadi', des: 'Theatre Attendant' },
   { fullName: 'Ibrahim Bawa', des: 'Theatre Attendant' },
@@ -180,7 +180,7 @@ const resource_staff_eye = [
   { fullName: 'Abdullaziz Ibrahim', des: 'Theatre Attendant' },
   { fullName: 'Idris Mai Aiki', des: 'Clinic Attendant' },
   { fullName: 'Zainab Abubakar', des: 'Clinic Attendant' },
-  { fullName: 'Sama’ila Adamu', des: 'Clinic Attendant' },
+  { fullName: "Sama'ila Adamu", des: 'Clinic Attendant' },
   { fullName: 'Nura Sani Kaura', des: 'Data Analyst' },
   { fullName: 'Zainu Ibrahim', des: 'Biometry Lab Technician' },
   { fullName: 'Murtala Ibrahim', des: 'Medical Record' },
@@ -228,7 +228,7 @@ const groin = [
   { fullName: 'Dr Isah M. Moriki', des: 'Anaesthetist' },
   { fullName: 'Nr Kabiru Salisu Zamau', des: 'Anaesthetist' },
   { fullName: 'Nr Kabiru Alhassani', des: 'Anaesthetist' },
-  { fullName: 'Nr Bala Moh’d', des: 'Anaesthetist' },
+  { fullName: "Nr Bala Moh'd", des: 'Anaesthetist' },
   { fullName: 'Nr Abdulsamad Yusuf', des: 'Anaesthetist' },
   { fullName: 'Nr Nura Isah', des: 'Anaesthetist' },
   { fullName: 'Nr Abubakar Sadiq', des: 'Anaesthetist' },
@@ -357,6 +357,11 @@ type OperatedCase = {
   total: number
 }
 
+type StaffMember = {
+  fullName: string
+  des: string
+}
+
 const columns: ColumnDef<OperatedCase>[] = [
   {
     accessorKey: 'type',
@@ -372,7 +377,121 @@ const columns: ColumnDef<OperatedCase>[] = [
   },
 ]
 
+const ResourceStaffTable = memo(
+  ({ title, data }: { title: string; data: StaffMember[] }) => {
+    const staffColumns: ColumnDef<StaffMember & { sn: number }>[] = [
+      {
+        accessorKey: 'sn',
+        header: 'SN',
+      },
+      {
+        accessorKey: 'fullName',
+        header: 'Full Name',
+      },
+      {
+        accessorKey: 'des',
+        header: 'Designation',
+      },
+    ]
+
+    const dataWithSN = data.map((item, idx) => ({
+      ...item,
+      sn: idx + 1,
+    }))
+
+    const table = useReactTable({
+      data: dataWithSN,
+      columns: staffColumns,
+      getCoreRowModel: getCoreRowModel(),
+      getPaginationRowModel: getPaginationRowModel(),
+      initialState: {
+        pagination: {
+          pageSize: 10,
+        },
+      },
+    })
+
+    return (
+      <div className="mb-8">
+        <h2 className="text-xl md:text-2xl my-4">{title}</h2>
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <div className="flex items-center justify-between mt-4">
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              Next
+            </Button>
+          </div>
+          <div className="text-sm text-muted-foreground">
+            Page {table.getState().pagination.pageIndex + 1} of{' '}
+            {table.getPageCount()}
+          </div>
+          <div>
+            <select
+              name="show"
+              title="pagination"
+              value={table.getState().pagination.pageSize}
+              onChange={(e) => {
+                table.setPageSize(Number(e.target.value))
+              }}
+              className="p-1 border rounded"
+            >
+              {[10, 20, 50].map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  Show {pageSize}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
+    )
+  },
+)
+
 function About() {
+  const [showNav, setShowNav] = useState(false)
+
   const table = useReactTable({
     data: operatedCases,
     columns,
@@ -385,8 +504,84 @@ function About() {
     },
   })
 
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      setShowNav(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-linear-to-br from-background to-blue-50">
+      {/* Floating Navigation Button */}
+      <div className="fixed top-24 right-4 z-50">
+        <Button
+          onClick={() => setShowNav(!showNav)}
+          className="bg-teal-700 hover:bg-teal-800 text-white rounded-full p-3 shadow-lg"
+        >
+          <Menu size={24} />
+        </Button>
+
+        {showNav && (
+          <div className="absolute top-14 right-0 bg-white rounded-lg shadow-xl p-4 w-64 border border-gray-200">
+            <h3 className="font-semibold text-teal-700 mb-3">
+              Quick Navigation
+            </h3>
+            <div className="space-y-2">
+              <button
+                onClick={() => scrollToSection('stats')}
+                className="block w-full text-left px-3 py-2 hover:bg-teal-50 rounded"
+              >
+                Stats
+              </button>
+              <button
+                onClick={() => scrollToSection('background')}
+                className="block w-full text-left px-3 py-2 hover:bg-teal-50 rounded"
+              >
+                Background
+              </button>
+              <button
+                onClick={() => scrollToSection('objectives')}
+                className="block w-full text-left px-3 py-2 hover:bg-teal-50 rounded"
+              >
+                Objectives
+              </button>
+              <button
+                onClick={() => scrollToSection('methodology')}
+                className="block w-full text-left px-3 py-2 hover:bg-teal-50 rounded"
+              >
+                Methodology
+              </button>
+              <button
+                onClick={() => scrollToSection('impact')}
+                className="block w-full text-left px-3 py-2 hover:bg-teal-50 rounded"
+              >
+                Impact
+              </button>
+              <button
+                onClick={() => scrollToSection('operated-cases')}
+                className="block w-full text-left px-3 py-2 hover:bg-teal-50 rounded"
+              >
+                Operated Cases
+              </button>
+              <button
+                onClick={() => scrollToSection('team')}
+                className="block w-full text-left px-3 py-2 hover:bg-teal-50 rounded"
+              >
+                Leadership Team
+              </button>
+              <button
+                onClick={() => scrollToSection('resource-staff')}
+                className="block w-full text-left px-3 py-2 hover:bg-teal-50 rounded"
+              >
+                Resource Staff Tables
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
       <div className="py-24 px-4 max-w-7xl mx-auto">
         {/* Hero Section */}
         <Card className="relative bg-linear-to-r from-teal-700 to-emerald-700 text-white rounded-2xl overflow-hidden mb-16">
@@ -403,7 +598,7 @@ function About() {
         </Card>
 
         {/* Stats Section */}
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
+        <div id="stats" className="grid md:grid-cols-3 gap-8 mb-16">
           <StatCard
             icon={Target}
             title="Target Cases"
@@ -425,7 +620,7 @@ function About() {
         </div>
 
         {/* Background Section */}
-        <div className="grid lg:grid-cols-2 gap-12 mb-16">
+        <div id="background" className="grid lg:grid-cols-2 gap-12 mb-16">
           <Card className="bg-background shadow-lg border-0 rounded-2xl">
             <CardHeader>
               <CardTitle className="text-teal-700 text-2xl md:text-3xl">
@@ -494,7 +689,10 @@ function About() {
         </div>
 
         {/* Objectives Section */}
-        <Card className="bg-background shadow-lg border-0 rounded-2xl mb-16">
+        <Card
+          id="objectives"
+          className="bg-background shadow-lg border-0 rounded-2xl mb-16"
+        >
           <CardHeader>
             <CardTitle className="text-3xl md:text-4xl bg-linear-to-r from-teal-700 to-indigo-600 text-transparent bg-clip-text text-center">
               Objectives
@@ -515,7 +713,10 @@ function About() {
         </Card>
 
         {/* Methodology Section */}
-        <Card className="relative bg-muted rounded-2xl overflow-hidden mb-16">
+        <Card
+          id="methodology"
+          className="relative bg-muted rounded-2xl overflow-hidden mb-16"
+        >
           <div className="relative z-10 p-8">
             <CardHeader>
               <CardTitle className="text-3xl md:text-4xl bg-linear-to-r from-teal-700 to-indigo-600 text-transparent bg-clip-text text-center">
@@ -571,7 +772,10 @@ function About() {
         </Card>
 
         {/* Impact Section */}
-        <Card className="relative bg-muted rounded-2xl overflow-hidden mb-16">
+        <Card
+          id="impact"
+          className="relative bg-muted rounded-2xl overflow-hidden mb-16"
+        >
           <div className="relative z-10 p-8">
             <CardHeader>
               <CardTitle className="text-3xl md:text-4xl bg-linear-to-r from-teal-700 to-indigo-600 text-transparent bg-clip-text text-center">
@@ -655,7 +859,7 @@ function About() {
         </div>
 
         {/* Cumulative Operated Cases Section */}
-        <div className="mb-16">
+        <div id="operated-cases" className="mb-16">
           <h1 className="text-3xl md:text-4xl bg-linear-to-r from-teal-700 text-transparent bg-clip-text to-indigo-600 text-center my-14">
             Cumulative Operated Cases, By Centre, From August 2023 to October
             2025
@@ -740,9 +944,9 @@ function About() {
         </div>
 
         {/* Team Members Section */}
-        <div className="mb-16">
+        <div id="team" className="mb-16">
           <h1 className="text-3xl md:text-4xl bg-linear-to-r from-teal-700 text-transparent bg-clip-text to-indigo-600 text-center my-14">
-            Our Team
+            Our Leadership Team
           </h1>
           <div className="grid md:grid-cols-4 gap-6 my-10 p-4">
             {members.map((m, i) => (
@@ -771,77 +975,25 @@ function About() {
               </Card>
             ))}
           </div>
-          <div className="my-10">
-            <div>
-              <h2 className="text-xl md:text-2xl my-4">
-                Resource Staff for VVF Operation
-              </h2>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>SN</TableHead>
-                    <TableHead>Full Name</TableHead>
-                    <TableHead>Designation</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {team_members.map((t, idx) => (
-                    <TableRow key={idx}>
-                      <TableCell>{idx + 1}</TableCell>
-                      <TableCell>{t.fullName}</TableCell>
-                      <TableCell>{t.des}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-            <div>
-              <h2 className="text-xl md:text-2xl my-4">
-                Resource Staff for Eye Operations
-              </h2>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>SN</TableHead>
-                    <TableHead>Full Name</TableHead>
-                    <TableHead>Designation</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {resource_staff_eye.map((t, idx) => (
-                    <TableRow key={idx}>
-                      <TableCell>{idx + 1}</TableCell>
-                      <TableCell>{t.fullName}</TableCell>
-                      <TableCell>{t.des}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-            <div>
-              <h2 className="text-xl md:text-2xl my-4">
-                Resource Staff for Groin Operations
-              </h2>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>SN</TableHead>
-                    <TableHead>Full Name</TableHead>
-                    <TableHead>Designation</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {groin.map((t, idx) => (
-                    <TableRow key={idx}>
-                      <TableCell>{idx + 1}</TableCell>
-                      <TableCell>{t.fullName}</TableCell>
-                      <TableCell>{t.des}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </div>
+        </div>
+
+        {/* Resource Staff Tables Section */}
+        <div id="resource-staff" className="mb-16">
+          <h1 className="text-3xl md:text-4xl bg-linear-to-r from-teal-700 text-transparent bg-clip-text to-indigo-600 text-center my-14">
+            Resource Staff
+          </h1>
+          <ResourceStaffTable
+            title="Resource Staff for VVF Operation"
+            data={team_members}
+          />
+          <ResourceStaffTable
+            title="Resource Staff for Eye Operations"
+            data={resource_staff_eye}
+          />
+          <ResourceStaffTable
+            title="Resource Staff for Groin Operations"
+            data={groin}
+          />
         </div>
       </div>
     </div>
